@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bowling Lane Booking</title>
+  <script>
+    const apiUrl = "https://script.google.com/macros/s/AKfycby80QlGmvK4ZYa7pbSUTGcunK5GiSS-K0IKmSE3xiz66G4uB4H1I4izKAy1K51pVPqf/exec"; // Replace with your web app URL
+
+    async function checkAvailability() {
+      const time = document.getElementById("time").value;
+      const lane = document.getElementById("lane").value;
+
+      const response = await fetch(`${apiUrl}?action=check&time=${time}&lane=${lane}`);
+      const data = await response.json();
+
+      if (data.available) {
+        document.getElementById("status").innerText = "Slot is available!";
+      } else {
+        document.getElementById("status").innerText = "Slot is already booked.";
+      }
+    }
+
+    async function bookSlot() {
+      const time = document.getElementById("time").value;
+      const lane = document.getElementById("lane").value;
+
+      const response = await fetch(`${apiUrl}?action=book&time=${time}&lane=${lane}`);
+      const message = await response.text();
+
+      document.getElementById("status").innerText = message;
+    }
+  </script>
+</head>
+<body>
+  <h1>Bowling Lane Booking</h1>
+  <label for="time">Select Time:</label>
+  <select id="time">
+    <option value="9:00 AM">9:00 AM</option>
+    <option value="9:30 AM">9:30 AM</option>
+    <!-- Add more time slots -->
+  </select>
+  <br>
+  <label for="lane">Select Lane:</label>
+  <select id="lane">
+    <option value="1">Lane 1</option>
+    <option value="2">Lane 2</option>
+    <!-- Add more lanes -->
+  </select>
+  <br>
+  <button onclick="checkAvailability()">Check Availability</button>
+  <button onclick="bookSlot()">Book Slot</button>
+  <p id="status"></p>
+</body>
+</html>
