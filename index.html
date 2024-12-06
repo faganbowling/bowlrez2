@@ -5,30 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bowling Lane Booking</title>
   <script>
-    const apiUrl = "https://script.google.com/macros/s/AKfycby80QlGmvK4ZYa7pbSUTGcunK5GiSS-K0IKmSE3xiz66G4uB4H1I4izKAy1K51pVPqf/exec"; // Replace with your web app URL
+    const apiUrl = "YOUR_GOOGLE_APPS_SCRIPT_URL"; // Replace with your Apps Script URL
 
     async function checkAvailability() {
       const time = document.getElementById("time").value;
-      const lane = document.getElementById("lane").value;
 
-      const response = await fetch(`${apiUrl}?action=check&time=${time}&lane=${lane}`);
+      const response = await fetch(`${apiUrl}?action=check&time=${time}`);
       const data = await response.json();
 
       if (data.available) {
         document.getElementById("status").innerText = "Slot is available!";
       } else {
-        document.getElementById("status").innerText = "Slot is already booked.";
+        document.getElementById("status").innerText = "No slots available for this time.";
       }
     }
 
     async function bookSlot() {
       const time = document.getElementById("time").value;
-      const lane = document.getElementById("lane").value;
 
-      const response = await fetch(`${apiUrl}?action=book&time=${time}&lane=${lane}`);
-      const message = await response.text();
+      const response = await fetch(`${apiUrl}?action=book&time=${time}`);
+      const data = await response.json();
 
-      document.getElementById("status").innerText = message;
+      if (data.success) {
+        document.getElementById("status").innerText = `Booking successful! Lane ${data.lane} reserved.`;
+      } else {
+        document.getElementById("status").innerText = "Booking failed. No available lanes.";
+      }
     }
   </script>
 </head>
@@ -38,14 +40,8 @@
   <select id="time">
     <option value="9:00 AM">9:00 AM</option>
     <option value="9:30 AM">9:30 AM</option>
-    <!-- Add more time slots -->
-  </select>
-  <br>
-  <label for="lane">Select Lane:</label>
-  <select id="lane">
-    <option value="1">Lane 1</option>
-    <option value="2">Lane 2</option>
-    <!-- Add more lanes -->
+    <option value="10:00 AM">10:00 AM</option>
+    <!-- Add more time slots as needed -->
   </select>
   <br>
   <button onclick="checkAvailability()">Check Availability</button>
